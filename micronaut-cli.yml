@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: testinggrounds.micronaut.healthweb
+---
+testFramework: spek
+sourceLanguage: kotlin
