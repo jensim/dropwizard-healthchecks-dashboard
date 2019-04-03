@@ -12,6 +12,6 @@ class HostHealthCrawler(private val hostHealthSocket: HostHealthSocket) {
 
     @Scheduled(fixedDelay = "30s", initialDelay = "30s")
     fun crawl(){
-        hostHealthSocket.update(Host("hejkon.bejkon"))
+        hostHealthSocket.update(Host.fromUrl("http://localhost:8080/healthcheck"))
     }
 }

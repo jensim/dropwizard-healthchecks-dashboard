@@ -1,5 +1,5 @@
 micronaut:
     application:
         name: testinggrounds-micronaut-healthweb
-    mongodb:
-        uri: mongodb://localhost:27017/healthweb
+mongodb:
+    uri: mongodb://localhost:27017/healthweb
