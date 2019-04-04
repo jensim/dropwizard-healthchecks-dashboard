@@ -1,15 +1,13 @@
 package testinggrounds.micronaut.healthweb.repo
 
-import com.mongodb.reactivestreams.client.MongoClient
 import com.mongodb.reactivestreams.client.MongoCollection
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.bson.conversions.Bson
 
-abstract class CrudRepo<T>(val collectionName: String, val mongoClient: MongoClient) {
+abstract class CrudRepo<T>(val collectionName: String) {
 
-    inline fun <reified T> getCollection(): MongoCollection<T> = mongoClient
-            .getDatabase("healthweb")
+    inline fun <reified T> getCollection(): MongoCollection<T> = KMongoFactory.mDb
             .getCollection(collectionName, T::class.java)
 
     inline fun <reified T> insert(t: T) = Single.fromPublisher(getCollection<T>().insertOne(t)).map { t }

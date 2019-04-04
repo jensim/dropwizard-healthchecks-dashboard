@@ -2,22 +2,30 @@ package testinggrounds.micronaut.healthweb.host
 
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Post
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.slf4j.LoggerFactory
-import java.util.UUID
+import testinggrounds.micronaut.healthweb.HostHealthSocket
+import javax.inject.Inject
 
-@Controller("/hosts")
-class HostsController(private val hostsRepo: HostsRepo) {
+@Controller("/api/hosts")
+class HostsController {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @Get("/")
-    fun getHosts():Observable<Host> = hostsRepo.getAll()
+    @Inject
+    private lateinit var hostsRepo: HostsRepo
+    @Inject
+    private lateinit var hostHealthSocket: HostHealthSocket
 
-    @Get("add-random")
-    fun addRandom(): Single<Host> {
-        log.info("Adding random host!..")
-        return hostsRepo.insert(Host.fromUrl("http://${UUID.randomUUID()}:8080/healthcheck"))
-    }
+    @Get("/")
+    fun getHosts(): Observable<Host> = hostsRepo.getAll()
+
+    @Post("/")
+    fun add(hostSuggestion: HostSuggestion): Single<Host> = hostsRepo
+            .insert(Host.fromUrl(hostSuggestion.url))
+            .doOnSuccess { hostHealthSocket.update(it) }
+
+    data class HostSuggestion(val url:String)
 }
