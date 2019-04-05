@@ -10,7 +10,7 @@ plugins {
 apply plugin:"application"
 
 version "0.1"
-group "testinggrounds.micronaut.healthweb"
+group "dropwizard-healthchecks-dashboard"
 
 repositories {
     mavenLocal()
