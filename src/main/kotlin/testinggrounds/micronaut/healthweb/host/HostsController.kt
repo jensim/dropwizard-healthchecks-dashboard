@@ -27,5 +27,5 @@ class HostsController {
             .insert(Host.fromUrl(hostSuggestion.url))
             .doOnSuccess { hostHealthSocket.update(it) }
 
-    data class HostSuggestion(val url:String)
+    data class HostSuggestion(val url: String)
 }

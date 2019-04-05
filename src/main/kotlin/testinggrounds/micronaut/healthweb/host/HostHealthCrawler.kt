@@ -11,7 +11,7 @@ class HostHealthCrawler(private val hostHealthSocket: HostHealthSocket) {
     private val log = LoggerFactory.getLogger(javaClass)
 
     @Scheduled(fixedDelay = "30s", initialDelay = "30s")
-    fun crawl(){
+    fun crawl() {
         hostHealthSocket.update(Host.fromUrl("http://localhost:8080/healthcheck"))
     }
 }

@@ -1,0 +1,6 @@
+micronaut:
+    application:
+        name: Dropwizard healthchecks dashboard
+mongodb:
+    uri: mongodb://localhost:27017/dropwizard_dashboard_test
+    dbname: dropwizard_dashboard_test

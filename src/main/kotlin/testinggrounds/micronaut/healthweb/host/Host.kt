@@ -29,27 +29,28 @@ data class HostHealthChecks(
         @BsonProperty("checks")
         val checks: List<HealthCheck>)
 
-data class Host (
-    @BsonId
-    @BsonProperty("_id")
-    @JsonProperty("_id")
-    val _id: ObjectId?,
-    @BsonProperty("healthCheckUrl")
-    @JsonProperty("healthCheckUrl")
-    val healthCheckUrl: URL,
-    @BsonProperty("lastResponse")
-    @JsonProperty("lastResponse")
-    val lastResponse: HostHealthChecks?,
-    @BsonProperty("lastProbeTime")
-    @JsonProperty("lastProbeTime")
-    val lastProbeTime: LocalDateTime?,
-    @BsonProperty("unreachableProbeStreak")
-    @JsonProperty("unreachableProbeStreak")
-    val unreachableProbeStreak: Int? = 0,
-    @BsonProperty("healthStatus")
-    @JsonProperty("healthStatus")
-    val healthStatus: HostHealthStatus? = UNKNOWN
-){
+data class Host(
+        @BsonId
+        @BsonProperty("_id")
+        @JsonProperty("_id")
+        val _id: ObjectId?,
+        @BsonProperty("healthCheckUrl")
+        @JsonProperty("healthCheckUrl")
+        val healthCheckUrl: URL,
+        @BsonProperty("lastResponse")
+        @JsonProperty("lastResponse")
+        val lastResponse: HostHealthChecks?,
+        @BsonProperty("lastProbeTime")
+        @JsonProperty("lastProbeTime")
+        val lastProbeTime: LocalDateTime?,
+        @BsonProperty("unreachableProbeStreak")
+        @JsonProperty("unreachableProbeStreak")
+        val unreachableProbeStreak: Int? = 0,
+        @BsonProperty("healthStatus")
+        @JsonProperty("healthStatus")
+        val healthStatus: HostHealthStatus? = UNKNOWN
+) {
+
     companion object {
         fun fromUrl(url: String) = Host(null, URL(url), null, null, 0, UNKNOWN)
     }
