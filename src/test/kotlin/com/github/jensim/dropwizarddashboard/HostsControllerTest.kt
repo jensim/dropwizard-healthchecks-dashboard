@@ -1,4 +1,4 @@
-package testinggrounds.micronaut.healthweb.host
+package com.github.jensim.dropwizarddashboard
 
 import com.mongodb.reactivestreams.client.MongoDatabase
 import io.micronaut.context.ApplicationContext
@@ -12,8 +12,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
-import testinggrounds.micronaut.healthweb.Application
-import testinggrounds.micronaut.healthweb.host.HostsController.HostSuggestion
+import com.github.jensim.dropwizarddashboard.host.Host
+import com.github.jensim.dropwizarddashboard.host.HostsController.HostSuggestion
+import com.github.jensim.dropwizarddashboard.host.HostsRepo
 import javax.inject.Inject
 
 @MicronautTest(application = Application::class, propertySources = ["application-test.yml"])

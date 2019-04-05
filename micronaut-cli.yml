@@ -1,5 +1,5 @@
 profile: service
-defaultPackage: testinggrounds.micronaut.healthweb
+defaultPackage: com.github.jensim.dropwizarddashboard
 ---
-testFramework: spek
+testFramework: junit
 sourceLanguage: kotlin

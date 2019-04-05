@@ -1,6 +1,6 @@
 micronaut:
     application:
-        name: testinggrounds-micronaut-healthweb
+        name: DropwizardDashboard
 mongodb:
     uri: mongodb://localhost:27017/dropwizard_dashboard
     dbname: dropwizard_dashboard

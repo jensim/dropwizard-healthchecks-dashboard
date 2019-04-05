@@ -1,10 +1,10 @@
-package testinggrounds.micronaut.healthweb.host
+package com.github.jensim.dropwizarddashboard.host
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.codecs.pojo.annotations.BsonProperty
 import org.bson.types.ObjectId
-import testinggrounds.micronaut.healthweb.host.HostHealthStatus.UNKNOWN
+import com.github.jensim.dropwizarddashboard.host.HostHealthStatus.UNKNOWN
 import java.net.URL
 import java.time.LocalDateTime
 

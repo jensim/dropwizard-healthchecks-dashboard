@@ -1,8 +1,8 @@
-package testinggrounds.micronaut.healthweb.host
+package com.github.jensim.dropwizarddashboard.host
 
 import io.micronaut.scheduling.annotation.Scheduled
 import org.slf4j.LoggerFactory
-import testinggrounds.micronaut.healthweb.HostHealthSocket
+import com.github.jensim.dropwizarddashboard.HostHealthSocket
 import javax.inject.Singleton
 
 @Singleton

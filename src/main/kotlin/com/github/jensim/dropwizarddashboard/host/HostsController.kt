@@ -1,4 +1,4 @@
-package testinggrounds.micronaut.healthweb.host
+package com.github.jensim.dropwizarddashboard.host
 
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
@@ -6,7 +6,7 @@ import io.micronaut.http.annotation.Post
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.slf4j.LoggerFactory
-import testinggrounds.micronaut.healthweb.HostHealthSocket
+import com.github.jensim.dropwizarddashboard.HostHealthSocket
 import javax.inject.Inject
 
 @Controller("/api/hosts")

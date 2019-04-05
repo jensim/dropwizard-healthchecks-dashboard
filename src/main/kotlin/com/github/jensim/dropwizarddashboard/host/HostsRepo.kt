@@ -1,9 +1,9 @@
-package testinggrounds.micronaut.healthweb.host
+package com.github.jensim.dropwizarddashboard.host
 
 import com.mongodb.client.model.IndexOptions
 import com.mongodb.reactivestreams.client.MongoCollection
 import org.litote.kmongo.reactivestreams.createIndex
-import testinggrounds.micronaut.healthweb.repo.CrudRepo
+import com.github.jensim.dropwizarddashboard.repo.CrudRepo
 import javax.inject.Singleton
 
 @Singleton

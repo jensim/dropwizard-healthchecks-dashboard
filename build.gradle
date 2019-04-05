@@ -50,7 +50,7 @@ shadowJar {
 
 run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
 
-mainClassName = "testinggrounds.micronaut.healthweb.Application"
+mainClassName = "com.github.jensim.dropwizarddashboard.Application"
 
 test {
     useJUnitPlatform()

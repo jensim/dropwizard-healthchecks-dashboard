@@ -1,4 +1,4 @@
-package testinggrounds.micronaut.healthweb.repo
+package com.github.jensim.dropwizarddashboard.repo
 
 import com.mongodb.reactivestreams.client.MongoCollection
 import com.mongodb.reactivestreams.client.MongoDatabase
