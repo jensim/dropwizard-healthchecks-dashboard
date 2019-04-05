@@ -5,3 +5,9 @@ jdk:
   - openjdk10
   - openjdk11
 services: mongodb
+addons:
+  sonarcloud:
+    organization: dropwizard-healthchecks-dashboard_travis-ci-token
+    token:
+      secure: "RPlSk+lFRYeDrO7YQ5fz1xDkyONA3IlaIerc1QrAGKZ7IXkvG9h2cjki9LhHVZV4ygDYXPvSSvjgSpnAnAwuVYsMysV/2rj1SpojkiVWi/cN1iHG4zeX3PQvTNlfz4YI8Y0wRlNOTR2a8Qz8Ullze1TXUXt8S7Gwf+AkvxWqlIpB0LxuRdzuQ9VnRcrGE4wKAjtEfqs+xYI4tsM0eZwHe7MVhS4L3/cau7d6ClqwugmkOyiJIYd3ZaOiUb9dCDIwbknYHeL4GRA5ktkHenWwYpJkmqng4z9OabxeqAiObe9bhpL79A/0T/Be7PtZHPn5/dK9VSgtW+zEp6i/v0jElXIg+vTZOP0DwQYZgCl8SOCqGa0SYdMTolmIHMxFRLedjIBHiH5x5NrUvCOaNPkJZX0hJcqaimKEhF9ucvhJXgQmO9cs/Pm43VxzLxzBuh7Ziwyl9ovMA11IzQ5JdDAnqg8deM2bE2RU3WIvqc6Cwdb2xfyZWYEGodEdTo62hTuo+YJDlXYA+4z6fzweCJW25uGeQqlgq+4wUMr07Tl4b3k+tXlBwS9H4CQnBiglPdyTo+ipwZwgI298wbEMcvetKSa9LtO6OguBrKDB39joXW5h7qfhx8vLfbihn/SqKyQem+eFMuYBuQYIqWxTaVcPp1dgHGw2cnx+D4CB1H3HRD4="
+
