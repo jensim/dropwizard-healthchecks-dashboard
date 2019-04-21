@@ -1,6 +1,15 @@
 micronaut:
     application:
         name: DropwizardDashboard
+    server:
+        port: 8081
+    router:
+        static-resources:
+            default:
+                enabled: true
+                mapping: /**
+                paths: classpath:frontend
 mongodb:
     uri: mongodb://localhost:27017/dropwizard_dashboard
     dbname: dropwizard_dashboard
+

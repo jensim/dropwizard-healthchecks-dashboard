@@ -1,12 +1,11 @@
 package com.github.jensim.dropwizarddashboard.host
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.github.jensim.dropwizarddashboard.host.HostHealthStatus.UNKNOWN
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.codecs.pojo.annotations.BsonProperty
 import org.bson.types.ObjectId
-import com.github.jensim.dropwizarddashboard.host.HostHealthStatus.UNKNOWN
 import java.net.URL
-import java.time.LocalDateTime
 
 enum class HostHealthStatus {
     HEALTHY,
@@ -15,19 +14,33 @@ enum class HostHealthStatus {
     UNKNOWN
 }
 
+data class ErrorDescription(
+        @BsonProperty("message")
+        @JsonProperty("message")
+        val message: String,
+        @BsonProperty("trace")
+        @JsonProperty("trace")
+        val trace: List<String>)
+
 data class HealthCheck(
         @BsonProperty("message")
         @JsonProperty("message")
         val message: String,
         @JsonProperty("healthy")
         @BsonProperty("healthy")
-        val healthy: Boolean
+        val healthy: Boolean,
+        @JsonProperty("error", required = false)
+        @BsonProperty("error")
+        val error: ErrorDescription?
 )
 
 data class HostHealthChecks(
         @JsonProperty("checks")
         @BsonProperty("checks")
-        val checks: List<HealthCheck>)
+        val checks: List<HealthCheck>) {
+
+    fun isUnhealthy(): Boolean = checks.any { !it.healthy }
+}
 
 data class Host(
         @BsonId
@@ -42,7 +55,7 @@ data class Host(
         val lastResponse: HostHealthChecks?,
         @BsonProperty("lastProbeTime")
         @JsonProperty("lastProbeTime")
-        val lastProbeTime: LocalDateTime?,
+        val lastProbeTime: Long?,
         @BsonProperty("unreachableProbeStreak")
         @JsonProperty("unreachableProbeStreak")
         val unreachableProbeStreak: Int? = 0,

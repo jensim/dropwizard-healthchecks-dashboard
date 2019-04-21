@@ -14,10 +14,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import com.github.jensim.dropwizarddashboard.host.HostsController.HostSuggestion
+import org.junit.jupiter.api.Disabled
 import javax.inject.Inject
 
+@Disabled
 @MicronautTest(application = Application::class, propertySources = ["application-test.yml"])
-open class HostsControllerTest {
+open class HostsControllerIntegrationTest {
 
     private val log = LoggerFactory.getLogger(javaClass)
 

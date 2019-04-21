@@ -5,19 +5,12 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.slf4j.LoggerFactory
-import com.github.jensim.dropwizarddashboard.HostHealthSocket
+import java.util.UUID
 import javax.inject.Inject
 
 @Controller("/api/hosts")
-class HostsController {
-
-    private val log = LoggerFactory.getLogger(javaClass)
-
-    @Inject
-    private lateinit var hostsRepo: HostsRepo
-    @Inject
-    private lateinit var hostHealthSocket: HostHealthSocket
+class HostsController @Inject constructor(private val hostsRepo: HostsRepo,
+        private val hostHealthSocket: HostHealthSocket) {
 
     @Get("/")
     fun getHosts(): Observable<Host> = hostsRepo.getAll()
@@ -26,6 +19,9 @@ class HostsController {
     fun add(hostSuggestion: HostSuggestion): Single<Host> = hostsRepo
             .insert(Host.fromUrl(hostSuggestion.url))
             .doOnSuccess { hostHealthSocket.update(it) }
+
+    @Get("/rnd")
+    fun addRandom() = hostsRepo.insert(Host.fromUrl("http://${UUID.randomUUID()}:8080/healthcheck"))
 
     data class HostSuggestion(val url: String)
 }

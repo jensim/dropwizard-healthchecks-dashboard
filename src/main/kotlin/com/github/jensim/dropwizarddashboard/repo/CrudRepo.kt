@@ -6,19 +6,12 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.bson.conversions.Bson
 import org.litote.kmongo.reactivestreams.updateOneById
-import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
-abstract class CrudRepo<T : Any>(private val collectionName: String, private val c: Class<T>) {
+abstract class CrudRepo<T : Any> @Inject constructor(private val collectionName: String, private val c: Class<T>,
+        private val mongoDb: MongoDatabase) {
 
-    @Inject
-    private lateinit var mongoDb: MongoDatabase
-    private val ref = AtomicReference<MongoCollection<T>?>().apply { set(null) }
-    private val collection: MongoCollection<T>
-        get() {
-            ref.compareAndSet(null, constructCollection())
-            return ref.get()!!
-        }
+    private val collection: MongoCollection<T> = constructCollection()
 
     /**
      * Wanna add an index?
@@ -33,6 +26,7 @@ abstract class CrudRepo<T : Any>(private val collectionName: String, private val
         return a
     }
 
+    fun raw() = collection
     fun insert(t: T): Single<T> = Single.fromPublisher(collection.insertOne(t)).map { t }
     fun update(id: Any, t: T) = Single.fromPublisher(collection.updateOneById(id, t)).map { t }
     fun deleteOne(bson: Bson) = Single.fromPublisher(collection.deleteOne(bson))

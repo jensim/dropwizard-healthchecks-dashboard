@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="RUN Frontend and Backend --watch" type="CompoundRunConfigurationType">
+    <toRun name="run backend" type="GradleRunConfiguration" />
+    <toRun name="frontendServe" type="GradleRunConfiguration" />
+    <method v="2" />
+  </configuration>
+</component>
