@@ -31,7 +31,7 @@ data class HealthCheck(
         val healthy: Boolean,
         @JsonProperty("error", required = false)
         @BsonProperty("error")
-        val error: ErrorDescription?
+        val error: ErrorDescription? = null
 )
 
 data class HostHealthChecks(

@@ -13,7 +13,7 @@
           <option value="run" />
         </list>
       </option>
-      <option name="vmOptions" value="" />
+      <option name="vmOptions" value="-Dmicronaut.config.files=application-dev.yml" />
     </ExternalSystemSettings>
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />

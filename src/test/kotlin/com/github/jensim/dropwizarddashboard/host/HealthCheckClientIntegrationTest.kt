@@ -3,16 +3,14 @@ package com.github.jensim.dropwizarddashboard.host
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.HttpStatus.INTERNAL_SERVER_ERROR
 import io.micronaut.http.exceptions.HttpStatusException
-import io.micronaut.test.annotation.MicronautTest
 import io.reactivex.Flowable
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.util.UUID
 import javax.inject.Inject
 
 @Disabled
-@MicronautTest
 internal class HealthCheckClientIntegrationTest {
 
     @Inject
@@ -21,7 +19,6 @@ internal class HealthCheckClientIntegrationTest {
     @Test
     internal fun `missing host`() {
         healthCheckClient.check(Host.fromUrl("http://${UUID.randomUUID()}:41921/healthcheck"))
-                .blockingGet()
     }
 
     @Disabled
@@ -34,7 +31,7 @@ internal class HealthCheckClientIntegrationTest {
                 .onErrorReturn { mapThrown(it) }
                 .map { h to it as HostHealthChecks? }
                 .blockingFirst()
-        Assertions.assertNotNull(a)
+        assertNotNull(a)
     }
 
     fun mapThrown(t: Throwable): HostHealthChecks? {

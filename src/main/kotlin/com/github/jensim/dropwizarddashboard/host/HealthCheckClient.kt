@@ -9,12 +9,13 @@ import javax.inject.Singleton
 @Singleton
 class HealthCheckClient {
 
-    private val fuelManager = FuelManager.instance.removeAllResponseInterceptors()
 
     fun check(host: Host): Pair<Host, HostHealthChecks?> {
-        val req = fuelManager.request(GET, host.healthCheckUrl.toString())
+        val responseObject = FuelManager.instance.removeAllResponseInterceptors()
+                .request(GET, host.healthCheckUrl.toString())
+                .responseObject<HostHealthChecks>()
 
-        val c: HostHealthChecks? = Fuel.request(req).responseObject<HostHealthChecks>().third.component1()
+        val c: HostHealthChecks? = responseObject.third.component1()
 
         return host to c
     }

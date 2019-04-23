@@ -1,0 +1,35 @@
+{
+  "DataSourceHealthIndicator": {
+    "healthy": true,
+    "message": "UP {database=H2, hello=1}"
+  },
+  "DiskSpaceHealthIndicator": {
+    "healthy": true,
+    "message": "UP {total=499963170816, free=321445916672, threshold=10485760}"
+  },
+  "FailingHealthcheckService": {
+    "healthy": false,
+    "message": "BOOOOOM",
+    "error": {
+      "message": "BOOOOOM",
+      "stack": [
+        "java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)",
+        "java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)",
+        "org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)",
+        "java.base/java.lang.Thread.run(Thread.java:844)"
+      ]
+    }
+  },
+  "GarbageCollectionHealthCheck": {
+    "healthy": true,
+    "message": "no gc events. sample interval: 300000,00ms."
+  },
+  "HttpStatusHealthCheck": {
+    "healthy": true,
+    "message": "Last five minutes there has been 0 http 5XX responses"
+  },
+  "OracleObjectHealthCheck": {
+    "healthy": true,
+    "message": "No oracle database to check"
+  }
+}
