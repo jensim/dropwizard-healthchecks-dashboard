@@ -1,28 +1,27 @@
 package com.github.jensim.dropwizarddashboard.host
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.github.jensim.dropwizarddashboard.mockhealth.MockHealthController.Companion.RESPONSE
+import com.github.jensim.dropwizarddashboard.mockhealth.MockHealthController.Companion.RESPONSE.BAD
 import com.github.jensim.dropwizarddashboard.mockhealth.MockHealthController.Companion.RESPONSE.GOOD
 import com.github.jensim.dropwizarddashboard.mockhealth.MockHealthController.Companion.RESPONSE.INTERNAL_SERVER_ERROR
 import com.github.jensim.dropwizarddashboard.mockhealth.MockHealthController.Companion.RESPONSE.NOT_FOUND
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.mockserver.client.MockServerClient
-import org.mockserver.integration.ClientAndServer
 import org.mockserver.integration.ClientAndServer.startClientAndServer
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpResponse
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class HealthCheckClientTest {
 
     companion object {
-        private val mockServer: MockServerClient = startClientAndServer(0)
+        private val port = 8999
+        private val mockServer: MockServerClient = startClientAndServer(port)
 
         @AfterAll
         fun tearDown() {
@@ -30,8 +29,17 @@ class HealthCheckClientTest {
         }
     }
 
+    enum class TestCase(val mockResponse: RESPONSE, private val isUnhealthy: Boolean?) {
+        CASE_500(INTERNAL_SERVER_ERROR, true),
+        CASE_GOOD(GOOD, false),
+        CASE_BAD(BAD, true),
+        CASE_404(NOT_FOUND, null);
+
+        fun validate(checks: HostHealthChecks?): Boolean = checks?.isUnhealthy() == isUnhealthy
+    }
+
     private val endpoint = "healthcheck"
-    private val url get() = "http://localhost:${(mockServer as ClientAndServer).localPort}/$endpoint"
+    private val url get() = "http://localhost:$port/$endpoint"
     private val host get() = Host.fromUrl(url)
     private val healthCheckClient = HealthCheckClient(ObjectMapper())
 
@@ -45,38 +53,17 @@ class HealthCheckClientTest {
         mockServer.reset()
     }
 
-    @Test
-    internal fun `internal server error`() {
+    @ParameterizedTest
+    @EnumSource(value = TestCase::class)
+    internal fun `test all types`(tc: TestCase) {
+        println("Testing ${tc.name} $url")
+        assertTrue(mockServer.isRunning)
         mockServer.`when`(HttpRequest.request("/$endpoint"))
-                .respond(HttpResponse.response(INTERNAL_SERVER_ERROR.data.toString())
-                        .withStatusCode(500))
-        val (host, checks) = healthCheckClient.check(host).blockingGet()
+                .respond(HttpResponse.response(tc.mockResponse.data as String)
+                        .withStatusCode(tc.mockResponse.statusCode.code))
 
-        assertEquals(host, host)
-        assertNotNull(checks)
-        assertTrue(checks!!.isUnhealthy())
-    }
+        val checks: HostHealthChecks? = healthCheckClient.check(host)
 
-    @Test
-    internal fun `Not found`() {
-        mockServer.`when`(HttpRequest.request("/$endpoint"))
-                .respond(HttpResponse.response(NOT_FOUND.data.toString())
-                        .withStatusCode(404))
-        val (host, checks) = healthCheckClient.check(host).blockingGet()
-
-        assertEquals(host, this.host)
-        assertNull(checks)
-    }
-
-    @Test
-    internal fun `on ok`() {
-        mockServer.`when`(HttpRequest.request("/$endpoint"))
-                .respond(HttpResponse.response(GOOD.data.toString())
-                        .withStatusCode(200))
-        val (host, checks) = healthCheckClient.check(host).blockingGet()
-
-        assertEquals(host, this.host)
-        assertNotNull(checks)
-        assertFalse(checks!!.isUnhealthy())
+        assertTrue(tc.validate(checks))
     }
 }

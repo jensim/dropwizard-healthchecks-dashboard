@@ -28,12 +28,11 @@ class MockHealthController {
             NOT_FOUND(HttpStatus.NOT_FOUND, "404 Not found")
         }
 
-        private fun toMap(vararg values: HealthCheck): Map<String, HealthCheck> {
-            //val map =
-            return values
+        private fun toMap(vararg values: HealthCheck): String {
+            val map = values
                     .mapIndexed { i, t -> keys[i] to t }
                     .toMap()
-            //return om.writeValueAsString(map)
+            return om.writeValueAsString(map)
         }
     }
 

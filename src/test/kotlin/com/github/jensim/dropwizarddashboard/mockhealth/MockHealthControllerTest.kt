@@ -20,9 +20,9 @@ internal class MockHealthControllerTest {
     @Test
     internal fun name() {
         for (res in Companion.RESPONSE.values()) {
-            assertThat(res.data, not(emptyOrNullString()))
+            assertThat(res.data as String, not(emptyOrNullString()))
             if (res != NOT_FOUND) {
-                val data: Map<String, HealthCheck> = om.readValue(res.data, typeRef)
+                val data: Map<String, HealthCheck> = om.readValue(res.data as String, typeRef)
                 assertThat(data.entries, not(empty()))
                 for ((k, v) in data.entries) {
                     assertThat(k, not(emptyOrNullString()))
