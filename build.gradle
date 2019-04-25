@@ -31,8 +31,7 @@ dependencies {
     compile "io.micronaut:micronaut-runtime"
     compile "io.micronaut:micronaut-http-server-netty"
     compile 'org.litote.kmongo:kmongo-async:3.10.0'
-    compile 'com.github.kittinunf.fuel:fuel:2.0.1'
-    compile 'com.github.kittinunf.fuel:fuel-jackson:2.0.1'
+    compile 'com.mashape.unirest:unirest-java:1.4.9'
 
     kapt "io.micronaut:micronaut-inject-java"
     kapt "io.micronaut:micronaut-validation"
@@ -48,7 +47,7 @@ dependencies {
     testCompile "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
     testCompile "org.junit.jupiter:junit-jupiter-engine:5.1.0"
     testCompile 'io.rest-assured:rest-assured:3.3.0'
-    testCompile "com.github.tomakehurst:wiremock-jre8:2.23.2"
+    testCompile 'org.mock-server:mockserver-netty:5.5.1'
     testCompile 'org.jetbrains.kotlin:kotlin-test:1.2.61'
 }
 

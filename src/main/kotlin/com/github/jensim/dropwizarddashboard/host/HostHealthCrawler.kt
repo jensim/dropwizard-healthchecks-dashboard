@@ -6,13 +6,10 @@ import com.github.jensim.dropwizarddashboard.host.HostHealthStatus.UNREACHABLE
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Filters.lt
 import com.mongodb.client.model.Filters.or
-import com.mongodb.reactivestreams.client.FindPublisher
 import io.micronaut.scheduling.annotation.Scheduled
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
 import org.slf4j.LoggerFactory
 import java.time.Duration
-import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,45 +20,46 @@ class HostHealthCrawler @Inject constructor(
         private val client: HealthCheckClient) {
 
     private val log = LoggerFactory.getLogger(javaClass)
-    private val backoffDuration = Duration.ofSeconds(1).toMillis()
+    private val backoffDuration = Duration.ofMinutes(1).toMillis()
     private val timeWindow: Long
         get() = System.currentTimeMillis() - backoffDuration
 
-    //@Scheduled(fixedDelay = "5s", initialDelay = "5s")
+    @Scheduled(fixedDelay = "5s", initialDelay = "5s")
     fun crawl() {
-        //log.info("Crawling suggested hosts")
-        Observable.fromPublisher(getEligibleHosts())
-                .flatMap { updateProbeTime(it) }
-                .map { client.check(it) }
-                .flatMap { updateProbedHost(it.first, it.second) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
-                .timeout(3, SECONDS)
-                .subscribe({
-                    log.info("Good run ${it.healthCheckUrl}")
-                }, {
-                    log.error("Bad run", it)
-                })
+        getEligibleHosts().forEach { updateProbeTime(it) }
     }
 
-    private fun getEligibleHosts(): FindPublisher<Host> {
+    private fun getEligibleHosts(): Observable<Host> {
         val findExpression = or(
                 eq("lastProbeTime", null),
                 lt("lastProbeTime", timeWindow)
         )
         //log.info(findExpression.toString())
-        return hostsRepo.raw().find(findExpression).limit(5)
+        return hostsRepo.find(findExpression, 5)
     }
 
-    private fun updateProbeTime(host: Host): Observable<Host> =
-            hostsRepo.update(host._id as Any, host.copy(lastProbeTime = System.currentTimeMillis()))
-                    .map { host }
-                    .toObservable()
-                    .doOnNext { log.info("Host probe time updated ${host.healthCheckUrl.toURI().host}") }
+    private fun updateProbeTime(host: Host) {
+        log.debug("Updating probe time for host ${host.healthCheckUrl}")
+        hostsRepo.update(host._id as Any, host.copy(lastProbeTime = System.currentTimeMillis()))
+                .map { host }
+                .subscribe({ crawl(host) }, {
+                    log.error("Failed updating probe time")
+                })
+    }
 
-    private fun updateProbedHost(host: Host, check: HostHealthChecks?): Observable<Host> {
-        log.info("Updating host $host with result $check")
-        val n: Host? = if (check == null) {
+    fun crawl(host: Host) {
+        log.debug("Crawling host check ${host.healthCheckUrl}")
+        client.check(host).subscribe(
+                { (host, checks) -> updateProbedHost(host, checks) },
+                {
+                    log.error("Failed crawling host ${host.healthCheckUrl}")
+                    updateProbedHost(host, null)
+                })
+    }
+
+    private fun updateProbedHost(host: Host, check: HostHealthChecks?) {
+        log.debug("Updating host ${host.healthCheckUrl} with result ${check?.isUnhealthy()}")
+        if (check == null) {
             host.copy(lastResponse = null,
                     healthStatus = UNREACHABLE,
                     unreachableProbeStreak = (host.unreachableProbeStreak ?: 0) + 1)
@@ -72,13 +70,15 @@ class HostHealthCrawler @Inject constructor(
                 host.copy(lastResponse = check, healthStatus = HEALTHY, unreachableProbeStreak = 0)
             }
         } else {
+            log.debug("Nothing to update for host ${host.healthCheckUrl}")
             null
-        }
-        return if (n != null) {
-            hostHealthSocket.update(n)
-            hostsRepo.update(host._id as Any, n).toObservable()
-        } else {
-            Observable.empty()
+        }?.run {
+            hostHealthSocket.update(this)
+            hostsRepo.update(host._id as Any, this).subscribe({
+                log.debug("Updated Host ${host.healthCheckUrl} with checks ${check.isUnhealthy()}")
+            }, {
+                log.error("Failed updating host ${host.healthCheckUrl} with checks ${check.isUnhealthy()}", it)
+            })
         }
     }
 }

@@ -10,7 +10,7 @@ import java.util.function.Predicate
 import javax.inject.Inject
 
 @ServerWebSocket("/ws/hosthealth")
-class HostHealthSocket @Inject constructor(private val broadcaster: WebSocketBroadcaster,
+open class HostHealthSocket @Inject constructor(private val broadcaster: WebSocketBroadcaster,
         private val hostsRepo: HostsRepo) {
 
     @OnOpen

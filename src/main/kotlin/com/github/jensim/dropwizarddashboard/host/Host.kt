@@ -37,9 +37,9 @@ data class HealthCheck(
 data class HostHealthChecks(
         @JsonProperty("checks")
         @BsonProperty("checks")
-        val checks: List<HealthCheck>) {
+        val checks: Map<String, HealthCheck>) {
 
-    fun isUnhealthy(): Boolean = checks.any { !it.healthy }
+    fun isUnhealthy(): Boolean = checks.values.any { !it.healthy }
 }
 
 data class Host(
@@ -61,7 +61,10 @@ data class Host(
         val unreachableProbeStreak: Int? = 0,
         @BsonProperty("healthStatus")
         @JsonProperty("healthStatus")
-        val healthStatus: HostHealthStatus? = UNKNOWN
+        val healthStatus: HostHealthStatus? = UNKNOWN,
+        @BsonProperty("probeInterval")
+        @JsonProperty("probeInterval")
+        val probeInterval: Int? = null
 ) {
 
     companion object {

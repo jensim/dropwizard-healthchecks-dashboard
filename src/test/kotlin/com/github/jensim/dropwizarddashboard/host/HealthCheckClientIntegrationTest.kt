@@ -1,10 +1,7 @@
 package com.github.jensim.dropwizarddashboard.host
 
-import io.micronaut.http.HttpStatus
 import io.micronaut.http.HttpStatus.INTERNAL_SERVER_ERROR
 import io.micronaut.http.exceptions.HttpStatusException
-import io.reactivex.Flowable
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.util.UUID
@@ -25,6 +22,7 @@ internal class HealthCheckClientIntegrationTest {
     @Test
     internal fun `flowable map before catch`() {
         val h = Host.fromUrl("http://localhost:8080/health")
+        /*
         val err = HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, HostHealthChecks(emptyList()))
         val a = Flowable.error<HostHealthChecks?>(err)
                 .onExceptionResumeNext { null }
@@ -32,6 +30,7 @@ internal class HealthCheckClientIntegrationTest {
                 .map { h to it as HostHealthChecks? }
                 .blockingFirst()
         assertNotNull(a)
+        */
     }
 
     fun mapThrown(t: Throwable): HostHealthChecks? {
