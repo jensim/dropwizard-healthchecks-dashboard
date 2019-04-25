@@ -3,16 +3,15 @@ package com.github.jensim.dropwizarddashboard.host
 import com.github.jensim.dropwizarddashboard.repo.CrudRepo
 import com.mongodb.client.model.IndexOptions
 import com.mongodb.reactivestreams.client.MongoCollection
-import com.mongodb.reactivestreams.client.MongoDatabase
-import org.litote.kmongo.reactivestreams.createIndex
+import org.bson.Document
 import javax.inject.Singleton
 
 @Singleton
-open class HostsRepo(mongoDb: MongoDatabase) : CrudRepo<Host>("hosts", Host::class.java, mongoDb) {
+open class HostsRepo : CrudRepo<Host>("hosts", Host::class.java) {
 
     override fun collectionModifier(collection: MongoCollection<Host>) {
-        collection.createIndex("{lastProbeTime:1}")
-        collection.createIndex("{healthCheckUrl:-1}", object : IndexOptions() {
+        collection.createIndex(Document(mapOf("lastProbeTime" to 1)))
+        collection.createIndex(Document(mapOf("healthCheckUrl" to -1)), object : IndexOptions() {
             override fun isUnique(): Boolean = true
         })
     }

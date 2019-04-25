@@ -21,8 +21,8 @@ internal class HealthCheckClientIntegrationTest {
     @Disabled
     @Test
     internal fun `flowable map before catch`() {
-        val h = Host.fromUrl("http://localhost:8080/health")
         /*
+        val h = Host.fromUrl("http://localhost:8080/health")
         val err = HttpStatusException(HttpStatus.INTERNAL_SERVER_ERROR, HostHealthChecks(emptyList()))
         val a = Flowable.error<HostHealthChecks?>(err)
                 .onExceptionResumeNext { null }

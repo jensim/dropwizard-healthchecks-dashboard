@@ -9,6 +9,11 @@ micronaut:
                 enabled: true
                 mapping: /**
                 paths: classpath:frontend
+
+endpoints:
+    health:
+        enabled: true
+
 mongodb:
     uri: mongodb://localhost:27017/dropwizard_dashboard
     dbname: dropwizard_dashboard

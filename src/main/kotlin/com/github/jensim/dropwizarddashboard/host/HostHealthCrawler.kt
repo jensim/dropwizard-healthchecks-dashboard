@@ -45,7 +45,7 @@ class HostHealthCrawler @Inject constructor(
 
     private fun updateProbeTime(host: Host) {
         log.debug("Updating probe time for host ${host.healthCheckUrl}")
-        hostsRepo.update(host._id as Any, host.copy(lastProbeTime = System.currentTimeMillis())).blockingGet()
+        hostsRepo.updateOneById(host._id as Any, host.copy(lastProbeTime = System.currentTimeMillis())).blockingGet()
     }
 
     private fun updateProbedHost(host: Host, check: HostHealthChecks?) {
@@ -65,7 +65,7 @@ class HostHealthCrawler @Inject constructor(
             null
         }?.run {
             hostHealthSocket.update(this)
-            hostsRepo.update(host._id as Any, this).subscribe({
+            hostsRepo.updateOneById(host._id as Any, this).subscribe({
                 log.debug("Updated Host ${host.healthCheckUrl} with checks ${check.isUnhealthy()}")
             }, {
                 log.error("Failed updating host ${host.healthCheckUrl} with checks ${check.isUnhealthy()}", it)
